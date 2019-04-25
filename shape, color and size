@@ -1,0 +1,27 @@
+# prerequisite package imports
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+
+%matplotlib inline
+
+df = pd.read_csv('pokemon.csv')
+df.head()
+
+#  relationship between the pokemon combat statistics of speed, defense and special-defense
+plt.figure(figsize = [8,6])
+plt.scatter(data = pokemon, x = 'defense', y = 'special-defense', c = 'speed');
+plt.colorbar(label = 'Speed');
+plt.xlim(0,160);
+plt.ylim(15,160);
+plt.xlabel('Defense');
+plt.ylabel('Special Defense');
+
+# weight and height compare between fairy type and drangon type
+g = sb.FacetGrid(data = pkmn_FD, hue = 'type', size = 5)
+g.map(plt.scatter, 'weight', 'height')
+g.set(xscale = 'log', xticks = [0.1,0.3,1,3,10,30,100,300,1000])
+g.add_legend();
+plt.xlabel('Weight');
+plt.ylabel('Height');
