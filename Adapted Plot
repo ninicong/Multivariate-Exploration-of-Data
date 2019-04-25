@@ -1,0 +1,29 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+
+%matplotlib inline
+
+fuel_econ = pd.read_csv('fuel_econ.csv')
+fuel_econ.head()
+
+# Plot the city ('city') vs. highway ('highway') fuel efficiencies (both in mpg) for each vehicle class ('VClass'). 
+# Don't forget that vehicle class is an ordinal variable with levels 
+# {Minicompact Cars, Subcompact Cars, Compact Cars, Midsize Cars, Large Cars}
+classes = ['Minicompact Cars', 'Subcompact Cars', 'Compact Cars', 'Midsize Cars', 'Large Cars']
+vclasses = pd.api.types.CategoricalDtype(ordered = True, categories = classes)
+fuel_econ['VClass'] = fuel_econ['VClass'].astype(vclasses)
+
+g = sb.FacetGrid(data = fuel_econ, col = 'VClass', size = 3.5, col_wrap = 3)
+g.map(plt.scatter, 'city', 'highway')
+
+# Plot the relationship between engine size ('displ', in meters), vehicle class, and fuel type ('fuelType'). 
+# For the lattermost feature, focus only on Premium Gasoline and Regular Gasoline cars. 
+fecon_subset = fuel_econ.loc[fuel_econ['fuelType'].isin(['Premium Gasoline','Regular Gasoline'])]
+fecon_subset.head()
+
+g = sb.boxplot(data = fecon_subset, x = 'VClass', y = 'displ', hue = 'fuelType',
+              dodge = 0.3)
+plt.legend(loc = 6, bbox_to_anchor = (1.0, 0.5));# move the legend to the right of the figure
+plt.xticks(rotation = 15); # rotate the x label 15 degree, since the x label is long
