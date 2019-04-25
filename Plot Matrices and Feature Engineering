@@ -1,0 +1,31 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+
+%matplotlib inline
+
+fuel_econ = pd.read_csv('fuel_econ.csv')
+fuel_econ.head()
+
+# Practice creating a plot matrix, by depicting the relationship between five numeric variables in the fuel efficiency dataset:
+# 'displ', 'co2', 'city', 'highway', and 'comb'. 
+
+vvars = ['displ', 'co2', 'city', 'highway', 'comb']
+g = sb.PairGrid(data = fuel_econ, vars = vvars)
+g.map_diag(plt.hist)
+g.map_offdiag(plt.scatter);
+
+# Engineer a new variable that depicts CO2 emissions as a function of gallons of gas (g / gal). 
+# The 'co2' variable is in units of g / mi, and the 'comb' variable is in units of mi / gal.
+# plot this new emissions variable against engine size ('displ') and fuel type ('fuelType'). 
+# compare Premium Gasoline ,Regular Gasoline and Diesel fuel.
+fuel_econ['co2_comb'] = fuel_econ['co2'] * fuel_econ['comb']
+fecon_subset = fuel_econ.loc[fuel_econ['fuelType'].isin(['Premium Gasoline', 'Regular Gasoline', 'Diesel'])]
+
+g = sb.FacetGrid(data = fecon_subset, col = 'fuelType', size = 4)
+g.map(sb.regplot, 'co2_comb', 'displ', y_jitter = 0.04, fit_reg = False,
+      scatter_kws = {'alpha' : 1/5})
+
+plt.xlabel('CO2 (g/gal)')
+plt.ylabel('Engine displacement (l)')
