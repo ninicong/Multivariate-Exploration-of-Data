@@ -1,0 +1,49 @@
+# import all packages and set plots to be embedded inline
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+
+%matplotlib inline
+
+# load in the dataset into a pandas dataframe
+diamonds = pd.read_csv('diamonds.csv')
+diamonds.head()
+
+# univariate plot of diamond prices
+bin_edges = 10 ** np.arange(2.5, 4.3+0.1, 0.1)
+plt.hist(data = diamonds, x = 'price', bins = bin_edges);
+plt.xscale('log');
+tick_locs = [300, 500, 1000, 3000, 5000, 10000, 20000];
+plt.xticks(tick_locs, tick_locs);
+
+# univariate plot of carat weights
+bin_edges = 10 ** np.arange(-0.7, 0.7+0.01, 0.01)
+plt.hist(data = diamonds, x = 'carat', bins = bin_edges);
+plt.xscale('log');
+tick_locs = [0.2, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0, 5.0];
+plt.xticks(tick_locs, tick_locs);
+
+# univariate plots of cut
+cut_order = ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal']
+ordered_cut = pd.api.types.CategoricalDtype(ordered = True, categories = cut_order)
+diamonds['cut'] = diamonds['cut'].astype(ordered_cut)
+
+base_color = sb.color_palette()[0]
+sb.countplot(data = diamonds, x = 'cut', color = base_color);
+
+# univariate plots of color
+color_order = [ 'J', 'I', 'H', 'G', 'F', 'E','D']
+ordered_color = pd.api.types.CategoricalDtype(ordered = True, categories = color_order)
+diamonds['color'] = diamonds['color'].astype(ordered_color)
+
+base_color = sb.color_palette()[0]
+sb.countplot(data = diamonds, x = 'color', color = base_color);
+
+# univariate plots of clarity grades
+clarity_order = ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
+ordered_clarity = pd.api.types.CategoricalDtype(ordered = True, categories = clarity_order)
+diamonds['clarity'] = diamonds['clarity'].astype(ordered_clarity)
+
+base_color = sb.color_palette()[0]
+sb.countplot(data = diamonds, x = 'clarity', color = base_color);
