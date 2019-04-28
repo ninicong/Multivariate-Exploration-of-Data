@@ -127,3 +127,4 @@ g.map(plt.scatter, 'carat', 'price');
 # multivariate plot of price by cut and color, for approx. 1 carat diamonds
 diamonds_sub = diamonds.loc[(diamonds['carat'] >= 0.9) & (diamonds['carat'] <= 1.1)]
 sb.pointplot(data = diamonds_sub, x = 'cut', y = 'price', hue = 'color', dodge = 0.5, linestyles = "");
+
