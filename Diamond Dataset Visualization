@@ -128,4 +128,42 @@ g.map(plt.scatter, 'carat', 'price');
 diamonds_sub = diamonds.loc[(diamonds['carat'] >= 0.9) & (diamonds['carat'] <= 1.1)]
 sb.pointplot(data = diamonds_sub, x = 'cut', y = 'price', hue = 'color', dodge = 0.5, linestyles = "");
 
-plt.title('')
+# Explanatory Polishing 1
+# scatter plot of price vs. carat, with log transform on price axis and
+# cube-root transform on price
+diamonds['cr_carat'] = diamonds['carat'].apply(cuberoot_trans)
+
+plt.figure(figsize = [8, 6])
+
+plt.scatter(data = diamonds, x = 'cr_carat', y = 'price', alpha = 0.2)
+
+plt.title('Diamonds Price by Weight')
+plt.xlabel('cube root of carat')
+plt.ylabel('Price')
+
+plt.yscale('log')
+tick_locs = [300,500,1000,1500,3000,5000,10000,20000]
+plt.yticks(tick_locs,tick_locs);
+
+plt.show()
+
+# Explanatory Polishing 2
+# select diamonds of approximately 1 carat
+diamond_flag = (diamonds['carat'] >= 0.99) & (diamonds['carat'] <= 1.03)
+diamonds_1c = diamonds.loc[diamond_flag,:]
+
+plt.figure(figsize = [8,6])
+color_point = sb.color_palette('viridis', 9)
+
+ax = sb.pointplot(data = diamonds_1c, x = 'color', y = 'price', hue = 'cut', 
+                  dodge = 0.3, linestyles = '', palette = color_point)
+
+# special handling of tick marks following seaborn function - you might try
+# doing a log transform on the data itself instead of this workaround.
+plt.yscale('log')
+plt.yticks([3000, 5000, 8000], ['3k', '5k', '8k'])
+ax.set_yticklabels([], minor = True)
+
+plt.title('Diamonds Price by Color and Cut')
+
+plt.show();
